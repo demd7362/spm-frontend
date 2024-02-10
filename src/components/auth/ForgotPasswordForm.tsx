@@ -44,6 +44,7 @@ export default function ForgotPasswordForm() {
     };
     const handleSubmit = async (e: FormEvent) => {
         e.preventDefault();
+        const isEmailStep = formState.endpoint === 'send';
         setLoading(true);
         const {email, codeType, code} = formState;
         const result: FetchResult = await fetch.post(`/api/v1/code/mail/${formState.endpoint}`, {
@@ -52,18 +53,26 @@ export default function ForgotPasswordForm() {
             code
         });
         setLoading(false);
+        const {title,content} = result.modal;
         if (result.statusCode === 200) {
-            modal.setAuto('이메일로 임시 비밀번호가 발급되었습니다.', '이메일을 확인해주세요.');
-            setFormState(prev => ({
-                ...prev,
-                endpoint: 'verify',
-                button: '코드 입력',
-                buttonType: 'text',
-                value: '',
-                code: ''
-            }));
+            if (isEmailStep){ // 전송할 때
+                setFormState(prev => ({
+                    ...prev,
+                    endpoint: 'verify',
+                    button: '코드 입력',
+                    buttonType: 'text',
+                    value: '',
+                    code: ''
+                }));
+            } else { // 코드 인증할 때 성공할 경우, 이메일로 임시 비밀번호 발급 후 로그인 이동
+                modal.setAuto(title,content, () => {
+                    auth.handleAuthModal({
+                        authFormType: 'SignIn'
+                    });
+                });
+            }
         } else {
-            fetch.resultHandler(result);
+            modal.setAuto(title,content);
         }
     }
     const handleSignUp = () => {

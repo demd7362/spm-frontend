@@ -19,7 +19,8 @@ export default function BoardEditor() {
     const fetch = useFetch();
     const navigate = useNavigate();
     const handleSubmit = useCallback(() => {
-        const url = num === undefined ? '/board/insert' : '/board/update';
+        let url = num === undefined ? '/board/insert' : '/board/update';
+        url = '/api/v1' + url;
         const method = num === undefined ? 'post' : 'patch';
         fetch[method](url, data)
             .then(result => {
@@ -29,7 +30,6 @@ export default function BoardEditor() {
             })
     }, [data, num,auth.jwt])
     useEffect(() => {
-        console.log('header effect')
         header.setMenu(() => {
             return <button onClick={handleSubmit}>[작성 완료]</button>
         })

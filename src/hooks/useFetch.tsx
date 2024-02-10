@@ -21,11 +21,11 @@ export default function useFetch() {
     );
 
     const authenticate = useCallback(async (successCallback?: () => void) => {
-        const result = await getRequest('/auth/validate');
+        const result = await request('/auth/validate');
         resultHandler(result, successCallback);
     }, []);
 
-    const getRequest = useCallback(
+    const request = useCallback(
         async (url: string) => {
             const response = await fetch(PREFIX + url, defaultHeaders);
             return await response.json();
@@ -33,7 +33,7 @@ export default function useFetch() {
         [defaultHeaders],
     );
 
-    const bodyRequest = useCallback(
+    const requestWithBody = useCallback(
         async (url: string, method: string,body?: object) => {
             const response = await fetch(PREFIX + url, {
                 ...defaultHeaders,
@@ -46,21 +46,21 @@ export default function useFetch() {
     );
     const post = useCallback(
         async <T extends object>(url: string, body?: T) => {
-            return await bodyRequest(url, 'POST', body);
+            return await requestWithBody(url, 'POST', body);
         },
-        [bodyRequest],
+        [requestWithBody],
     );
     const patch = useCallback(
         async <T extends object>(url: string,body?: T) => {
-            return await bodyRequest(url, 'PATCH', body);
+            return await requestWithBody(url, 'PATCH', body);
         },
-        [bodyRequest],
+        [requestWithBody],
     );
     const $delete = useCallback(
         async <T extends object>(url: string,body?: T) => {
-            return await bodyRequest(url, 'DELETE', body);
+            return await requestWithBody(url, 'DELETE', body);
         },
-        [bodyRequest],
+        [requestWithBody],
     );
 
     const resultHandler = useCallback(
@@ -90,5 +90,5 @@ export default function useFetch() {
         [],
     );
 
-    return { get: getRequest, post,patch,$delete, resultHandler, authenticate};
+    return { get: request, post,patch,$delete, resultHandler, authenticate};
 }

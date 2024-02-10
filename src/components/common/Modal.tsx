@@ -13,7 +13,6 @@ export default function Modal({
 }: ModalProps) {
     const closeButtonRef = useRef<HTMLButtonElement>(null);
     useEffect(() => {
-        console.log('Modal Effect');
         const handleKeyDown = (event: KeyboardEvent) => {
             if (event.key === 'Enter') {
                 onClose();
