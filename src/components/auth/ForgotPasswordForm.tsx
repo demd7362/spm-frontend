@@ -11,8 +11,10 @@ type FormState = {
     code: string,
     email: string
 }
+
 export default function ForgotPasswordForm() {
     const fetch = useFetch();
+    const [remainSeconds, setRemainSeconds] = useState(0);
     const [formState, setFormState] = useState<FormState>({
         button: '분실코드 전송',
         endpoint: 'send',
@@ -32,9 +34,22 @@ export default function ForgotPasswordForm() {
                 buttonType: 'email',
                 code: '',
                 email: ''
-            })
+            });
         }
-    }, [])
+    }, []);
+    useEffect(() => {
+        const timer = setInterval(() => {
+            setRemainSeconds((prevTime) => prevTime - 1);
+            console.log('timer');
+        }, 1000);
+
+        if (remainSeconds <= 0) {
+            clearInterval(timer);
+        }
+        return () => {
+            clearInterval(timer);
+        };
+    }, [remainSeconds]);
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const type = e.target.type;
         setFormState(prev => ({
@@ -54,7 +69,8 @@ export default function ForgotPasswordForm() {
         });
         setLoading(false);
         const {title,content} = result.modal;
-        if (result.statusCode === 200) {
+        fetch.resultHandler(result,(data) => {
+            setRemainSeconds(data);
             if (isEmailStep){ // 전송할 때
                 setFormState(prev => ({
                     ...prev,
@@ -71,9 +87,7 @@ export default function ForgotPasswordForm() {
                     });
                 });
             }
-        } else {
-            modal.setAuto(title,content);
-        }
+        });
     }
     const handleSignUp = () => {
         auth.handleAuthModal({
@@ -97,7 +111,7 @@ export default function ForgotPasswordForm() {
                     </button>
                     <form onSubmit={handleSubmit} className="space-y-4">
                         <div>
-                            <label className="block text-sm font-bold" htmlFor={formState.buttonType}>{formState.buttonType === 'email' ? 'email' : '인증 코드를 입력해주세요.'}</label>
+                            <label className="block text-sm font-bold" htmlFor={formState.buttonType}>{formState.buttonType === 'email' ? 'email' : '인증 코드를 입력해주세요. 남은 시간 : ' + remainSeconds}</label>
                             <input className="block w-full mt-1 p-2 border rounded" type={formState.buttonType} name={formState.buttonType} value={formState.buttonType === 'email' ? formState.email : formState.code} onChange={handleInputChange} required/>
                         </div>
                         <div className="flex space-x-3">
