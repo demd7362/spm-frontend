@@ -1,5 +1,5 @@
-import { useCallback, useContext, useMemo, useState } from 'react';
-import { ContextStore } from '../router/AppRouter';
+import {useCallback, useContext, useMemo, useState} from 'react';
+import {ContextStore} from '../router/AppRouter';
 import {useLocation, useNavigate} from 'react-router-dom';
 import useAuth from "./useAuth";
 
@@ -7,7 +7,7 @@ const PREFIX = process.env.REACT_APP_API_URL;
 
 export default function useFetch() {
     const navigate = useNavigate();
-    const { modal,auth } = useContext(ContextStore);
+    const {modal, auth} = useContext(ContextStore);
     const defaultHeaders = useMemo(
         () => {
             return {
@@ -34,7 +34,7 @@ export default function useFetch() {
     );
 
     const requestWithBody = useCallback(
-        async (url: string, method: string,body?: object) => {
+        async (url: string, method: string, body?: object) => {
             const response = await fetch(PREFIX + url, {
                 ...defaultHeaders,
                 method,
@@ -51,13 +51,13 @@ export default function useFetch() {
         [requestWithBody],
     );
     const patch = useCallback(
-        async <T extends object>(url: string,body?: T) => {
+        async <T extends object>(url: string, body?: T) => {
             return await requestWithBody(url, 'PATCH', body);
         },
         [requestWithBody],
     );
     const $delete = useCallback(
-        async <T extends object>(url: string,body?: T) => {
+        async <T extends object>(url: string, body?: T) => {
             return await requestWithBody(url, 'DELETE', body);
         },
         [requestWithBody],
@@ -65,7 +65,7 @@ export default function useFetch() {
 
     const resultHandler = useCallback(
         (
-            { modal:modalOption ,statusCode, status, data }: FetchResult,
+            {modal: modalOption, statusCode, status, data}: FetchResult,
             successCallback?: (data?: any) => void,
         ) => {
             switch (statusCode) {
@@ -75,7 +75,7 @@ export default function useFetch() {
                 case 401:
                     modal.setAuto(modalOption.title, modalOption.content, () => {
                         auth.handleAuthModal({
-                            isOpen:true,
+                            isOpen: true,
                             authFormType: "SignIn",
                             callback: () => {
                                 navigate(-1);
@@ -90,5 +90,5 @@ export default function useFetch() {
         [],
     );
 
-    return { get: request, post,patch,$delete, resultHandler, authenticate};
+    return {get: request, post, patch, $delete, resultHandler, authenticate};
 }
