@@ -21,7 +21,7 @@ export default function useFetch() {
     );
 
     const authenticate = useCallback(async (successCallback?: () => void) => {
-        const result = await request('/auth/validate');
+        const result = await request('/api/v1/auth/validate');
         resultHandler(result, successCallback);
     }, []);
 
