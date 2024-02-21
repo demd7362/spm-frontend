@@ -2,7 +2,7 @@
   "name": "frontend",
   "version": "0.1.0",
   "private": true,
-  "proxy": "https://localhost",
+  "proxy": "http://localhost",
   "dependencies": {
     "@reduxjs/toolkit": "^1.9.6",
     "@tanstack/react-query": "^4.36.1",
