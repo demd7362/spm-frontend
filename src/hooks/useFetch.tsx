@@ -83,6 +83,9 @@ export default function useFetch() {
                         })
                     });
                     break;
+                case 500:
+                    modal.setAuto('Server Error','서버에서 에러가 발생하였습니다.\n 지속적으로 발생 시 관리자에게 문의 바랍니다.');
+                    break;
                 default:
                     modal.setAuto(modalOption.title, modalOption.content);
             }

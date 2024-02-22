@@ -26,7 +26,6 @@ export default function BoardCommentView() {
         handleClickPage
     } = usePagination<BoardCommentPagination>(Number(page || '1'), PAGE_SIZE, BOTTOM_SIZE);
     const [comment, setComment] = useState<string>('');
-    const [base64Image, setBase64Image] = useState<string>('');
     const getComments = useCallback(async () => {
         setLoading(true);
         const result = await fetch.get(`/api/v1/board/comment/${num}/${pagination.page}/${pagination.pageSize}`);
@@ -57,21 +56,21 @@ export default function BoardCommentView() {
             setComment('');
         });
     }, [comment])
-    useEffect(() => {
-        if (base64Image !== '') {
-            const imageElement = `<img src="${base64Image}"/>`;
-            fetch.post('/api/v1/board/comment/insert', {
-                bcContent: imageElement,
-                bcBoardNum: Number(num),
-                bcDeep: 1,
-            }).then(result => {
-                fetch.resultHandler(result, async () => {
-                    await getComments();
-                    setBase64Image('');
-                });
-            })
-        }
-    }, [base64Image])
+    // useEffect(() => {
+    //     if (base64Image !== '') {
+    //         const imageElement = `<img src="${base64Image}"/>`;
+    //         fetch.post('/api/v1/board/comment/insert', {
+    //             bcContent: imageElement,
+    //             bcBoardNum: Number(num),
+    //             bcDeep: 1,
+    //         }).then(result => {
+    //             fetch.resultHandler(result, async () => {
+    //                 await getComments();
+    //                 setBase64Image('');
+    //             });
+    //         })
+    //     }
+    // }, [base64Image])
     const handleAddImage = useCallback(() => {
         const input = document.createElement('input');
         input.setAttribute('type', 'file');
@@ -87,14 +86,29 @@ export default function BoardCommentView() {
                 })
                 return;
             }
-            const reader = new FileReader();
-            reader.readAsDataURL(file);
-            reader.addEventListener('load', () => {
-                if (typeof reader.result === 'string') {
-                    const base64 = reader.result;
-                    setBase64Image(base64);
-                }
-            })
+            try {
+                const reader = new FileReader();
+                reader.readAsDataURL(file);
+                reader.addEventListener('load', async () => {
+                    if (typeof reader.result === "string") {
+                        const base64 = reader.result.replace(/^data:.+;base64,/, '');
+                        const ociRequest: OCIRequest = {
+                            base64,
+                            name: file.name,
+                            size: file.size,
+                            type: 'comment'
+                        }
+                        const result = await fetch.post('/api/v1/oci/upload', ociRequest);
+                        fetch.resultHandler(result, (data) => {
+                            const newComment = `<img src="${data}">`;
+                            setComment(newComment);
+                            handleCommentSubmit();
+                        });
+                    }
+                })
+            } catch (e){
+                setComment('');
+            }
         })
 
     }, [])
