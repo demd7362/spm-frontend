@@ -4,14 +4,13 @@ import {ReactElement} from "react";
 import ForgotPasswordForm from "./ForgotPasswordForm";
 
 
-
 interface MapperType {
     SignIn: ReactElement,
     SignUp: ReactElement,
     ForgotPassword: ReactElement
 }
 
-const typeMapper:MapperType = {
+const typeMapper: MapperType = {
     SignIn: <SignInForm/>,
     SignUp: <SignUpForm/>,
     ForgotPassword: <ForgotPasswordForm/>

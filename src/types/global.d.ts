@@ -9,6 +9,7 @@ declare global {
 
     type SignUp = SignIn & {
         passwordCheck: string;
+        code: string;
     };
 
     type Jwt = {
