@@ -6,7 +6,7 @@ import Spinner from "../common/Spinner";
 type FormState = {
     button: '분실코드 전송' | '코드 입력',
     endpoint: 'send' | 'verify',
-    codeType: string,
+    authType: string,
     buttonType: 'email' | 'text',
     code: string,
     email: string
@@ -18,7 +18,7 @@ export default function ForgotPasswordForm() {
     const [formState, setFormState] = useState<FormState>({
         button: '분실코드 전송',
         endpoint: 'send',
-        codeType: '02',
+        authType: '02',
         buttonType: 'email',
         code: '',
         email: ''
@@ -30,7 +30,7 @@ export default function ForgotPasswordForm() {
             setFormState({
                 button: '분실코드 전송',
                 endpoint: 'send',
-                codeType: '02',
+                authType: '02',
                 buttonType: 'email',
                 code: '',
                 email: ''
@@ -61,10 +61,10 @@ export default function ForgotPasswordForm() {
         e.preventDefault();
         const isEmailStep = formState.endpoint === 'send';
         setLoading(true);
-        const {email, codeType, code} = formState;
+        const {email, authType, code} = formState;
         const result: FetchResult = await fetch.post(`/api/v1/code/mail/${formState.endpoint}`, {
             email,
-            codeType,
+            authType,
             code
         });
         setLoading(false);

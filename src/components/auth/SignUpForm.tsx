@@ -26,7 +26,7 @@ export default function SignUpForm() {
             const verifyResult: FetchResult = await fetch.post('/api/v1/code/mail/verify', {
                 code: formData.code,
                 email: formData.email,
-                codeType: '03'
+                authType: '03'
             });
             fetch.resultHandler(verifyResult, async () => {
                 const signUpResult: FetchResult = await fetch.post('/api/v1/auth/sign-up', formData);
@@ -48,7 +48,7 @@ export default function SignUpForm() {
             const result: FetchResult = await fetch.post('/api/v1/code/mail/send', {
                 code: formData.code,
                 email: formData.email,
-                codeType: '03'
+                authType: '03'
             });
             fetch.resultHandler(result, () => {
                 const {title, content} = result.modal;

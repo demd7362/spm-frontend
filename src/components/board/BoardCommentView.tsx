@@ -96,7 +96,7 @@ export default function BoardCommentView() {
                             base64,
                             name: file.name,
                             size: file.size,
-                            type: 'comment'
+                            type: '02'
                         }
                         const result = await fetch.post('/api/v1/oci/upload', ociRequest);
                         fetch.resultHandler(result, (data) => {

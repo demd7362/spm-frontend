@@ -113,7 +113,7 @@ declare global {
         saveToken: (Jwt:Jwt) => void;
         deleteToken: () => void;
     }
-    type OCIType = 'board' | 'comment'
+    type OCIType = '01' | '02'
 
     type OCIRequest = {
         base64: string;
