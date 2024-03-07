@@ -5,7 +5,7 @@ import {ContextStore} from "../../router/AppRouter";
 
 export default function SignInForm() {
     const fetch = useFetch();
-    const {header,auth} = useContext(ContextStore);
+    const {header, modal,auth} = useContext(ContextStore);
     const [formData, setFormData] = useState<SignIn>({
         email: '',
         password: '',
@@ -19,6 +19,8 @@ export default function SignInForm() {
         e.preventDefault();
         const result: FetchResult = await fetch.post('/api/v1/auth/sign-in', formData);
         fetch.resultHandler(result, (data) => {
+            const {title, content} = result.modal;
+            modal.setAuto(title, content);
             header.setUserMenu();
             auth.saveToken(data);
             auth.close();
