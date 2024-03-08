@@ -100,7 +100,7 @@ export default function BoardView() {
                             추천 {data.brCount}
                         </button>
                         <button
-                            onClick={() => navigate(-1)}
+                            onClick={() => navigate('/board/1')}
                             className="mt-4 bg-yellow-500 hover:bg-yellow-600 text-white font-bold py-2 px-4 rounded"
                         >
                             목록

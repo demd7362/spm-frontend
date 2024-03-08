@@ -78,7 +78,7 @@ export default function useFetch() {
                             isOpen: true,
                             authFormType: "SignIn",
                             callback: () => {
-                                navigate(-1);
+                                navigate('/');
                             }
                         })
                     });
