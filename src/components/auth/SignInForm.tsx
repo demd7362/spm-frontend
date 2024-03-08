@@ -20,10 +20,10 @@ export default function SignInForm() {
         const result: FetchResult = await fetch.post('/api/v1/auth/sign-in', formData);
         fetch.resultHandler(result, (data) => {
             const {title, content} = result.modal;
-            modal.setAuto(title, content);
             header.setUserMenu();
             auth.saveToken(data);
             auth.close();
+            modal.setAuto(title, content);
         });
     }, [formData])
     const handleForgotPassword = () => {
