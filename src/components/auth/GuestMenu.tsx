@@ -1,5 +1,7 @@
-import React, {useCallback, useContext} from "react";
+import React, {useContext} from "react";
 import {ContextStore} from "../../router/AppRouter";
+import {IoAccessibility, IoAddCircle, IoLogIn, IoLogInOutline, IoPersonAddOutline} from "react-icons/io5";
+import {PiSignIn} from "react-icons/pi";
 
 const commonProps = {className: 'hover:text-gray-300'};
 export default function GuestMenu(){
@@ -17,9 +19,9 @@ export default function GuestMenu(){
         })
     }
     return (
-        <>
-            <button {...commonProps} onClick={handleSignIn}> 로그인 </button>
-            <button {...commonProps} onClick={handleSignUp}> 회원가입 </button>
-        </>
+        <div className='flex space-x-4'>
+            <button {...commonProps} onClick={handleSignIn}><IoLogInOutline className='text-4xl'/></button>
+            <button {...commonProps} onClick={handleSignUp}><IoPersonAddOutline className='text-4xl'/></button>
+        </div>
     )
 }
