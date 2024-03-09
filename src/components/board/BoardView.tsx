@@ -1,6 +1,6 @@
 import {useNavigate, useParams} from 'react-router-dom';
 import useFetch from '../../hooks/useFetch';
-import React, {useCallback, useContext, useEffect, useState} from 'react';
+import React, {Suspense, useCallback, useContext, useEffect, useState} from 'react';
 import Spinner from "../common/Spinner";
 import dateUtil from "../../utils/dateUtils";
 import {ContextStore} from "../../router/AppRouter";
@@ -78,10 +78,10 @@ export default function BoardView() {
             </>
         )
     },[data])
-    if(!data) return <Spinner/>
+    if(!data) return null;
 
     return (
-        <>
+        <Suspense fallback={<Spinner/>}>
             <div className="container mx-auto p-4 bg-white rounded-lg h-screen">
                 <h1 className="text-2xl font-bold mb-4 text-black">{data.biTitle}</h1>
                 <div className="w-full max-w-[calc(100%-1rem)]">
@@ -111,6 +111,6 @@ export default function BoardView() {
 
             </div>
 
-        </>
+        </Suspense>
     )
 }

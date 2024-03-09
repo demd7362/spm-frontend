@@ -1,5 +1,7 @@
-import BoardForm from '../components/board/BoardForm';
+import BoardForm from "../components/board/BoardForm";
 
 export default function Board() {
-    return <BoardForm />;
+    return (
+        <BoardForm/>
+    )
 }

@@ -1,16 +1,13 @@
 import {BrowserRouter, Route, Routes} from 'react-router-dom';
-import Main from '../pages/Main';
-import NotFound from '../pages/NotFound';
-import React, {createContext} from 'react';
-import Header from '../components/common/Header';
-import Board from '../pages/Board';
-import Modal from '../components/common/Modal';
-import useModal from '../hooks/useModal';
-import BoardPost from '../components/board/BoardPost';
-import BoardView from "../components/board/BoardView";
+import React, {createContext, lazy, Suspense} from 'react';
 import useHeader from "../hooks/useHeader";
-import AuthForm from "../components/auth/AuthForm";
+import useModal from "../hooks/useModal";
 import useAuth from "../hooks/useAuth";
+import Modal from "../components/common/Modal";
+import Header from "../components/common/Header";
+import AuthForm from "../components/auth/AuthForm";
+import Spinner from "../components/common/Spinner";
+
 
 const modalDefaultValue: ModalContext = {
     props: {
@@ -66,22 +63,30 @@ export default function AppRouter() {
         modal : useModal(),
         auth: useAuth()
     }
+    const Main = lazy(() => import('../pages/Main'));
+    const NotFound = lazy(() => import('../pages/NotFound'));
+    const Board = lazy(() => import('../pages/Board'));
+    const BoardPost = lazy(() => import('../components/board/BoardPost'));
+    const BoardView = lazy(() => import("../components/board/BoardView"));
+    const Profile = lazy(() => import("../pages/Profile"));
     return (
         <BrowserRouter>
             <ContextStore.Provider value={contextStore}>
                 <Modal {...contextStore.modal.props}/>
                 <Header />
                 <AuthForm {...contextStore.auth}/>
-
-                <Routes>
-                    <Route path="/" element={<Main />} />
-                    <Route path="/board/:page" element={<Board />}/>
-                    <Route path="/board/post" element={<BoardPost />} />
-                    <Route path="/board/post/:num" element={<BoardPost />} />
-                    <Route path="/board/view/:num" element={<BoardView/>}/>
-                    <Route path="/board/view/:num/:page" element={<BoardView/>}/>
-                    <Route path="*" element={<NotFound />} />
-                </Routes>
+                <Suspense fallback={<Spinner/>}>
+                    <Routes>
+                        <Route path="/" element={<Main />} />
+                        <Route path="/board/:page" element={<Board />}/>
+                        <Route path="/board/post" element={<BoardPost />} />
+                        <Route path="/board/post/:num" element={<BoardPost />} />
+                        <Route path="/board/view/:num" element={<BoardView/>}/>
+                        <Route path="/board/view/:num/:page" element={<BoardView/>}/>
+                        <Route path="/profile" element={<Profile/>}/>
+                        <Route path="*" element={<NotFound />} />
+                    </Routes>
+                </Suspense>
             </ContextStore.Provider>
         </BrowserRouter>
     );

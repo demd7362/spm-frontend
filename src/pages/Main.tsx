@@ -1,8 +1,5 @@
 import React from 'react';
-import Header from '../components/common/Header';
-import dog from '../assets/dog.jpg';
-import ajax from '../hooks/useFetch';
-import useFetch from "../hooks/useFetch";
+import useFetch from '../hooks/useFetch';
 
 export default function Main() {
     const fetch = useFetch();

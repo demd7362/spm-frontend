@@ -17,7 +17,6 @@ export default function BoardForm() {
     const navigate = useNavigate();
     const {modal} = useContext(ContextStore);
     const fetch = useFetch();
-    const [loading, setLoading] = useState<boolean>(false);
     const {
         pagination,
         setPagination,
@@ -26,9 +25,6 @@ export default function BoardForm() {
         handleClickPage
     } = usePagination<BoardPagination>(Number(page || '1'), PAGE_SIZE_MULTIPLE_VALUE, BOTTOM_SIZE);
     useEffect(() => {
-        if (pagination.page === 1) {
-            setLoading(true);
-        }
         fetch
             .get(`/api/v1/board/list/${pagination.page}/${pagination.pageSize}`)
             .then((result) => {
@@ -42,7 +38,6 @@ export default function BoardForm() {
                         }));
                         navigate(`/board/${pagination.page || 1}`, { replace: true });
                     }
-                    setLoading(false);
                 });
             });
     }, [pagination.page, pagination.pageSize]);
@@ -81,7 +76,6 @@ export default function BoardForm() {
     const handleClickPost = (biNum: number) => {
         navigate(`/board/view/${biNum}/1`);
     }
-    if (loading) return <Spinner/>
     return (
         <>
             <div className={'container mx-auto'}>

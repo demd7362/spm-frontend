@@ -7,7 +7,7 @@ const PREFIX = process.env.REACT_APP_API_URL;
 
 export default function useFetch() {
     const navigate = useNavigate();
-    const {modal, auth} = useContext(ContextStore);
+    const {modal, auth, header} = useContext(ContextStore);
     const defaultHeaders = useMemo(
         () => {
             return {
@@ -73,6 +73,8 @@ export default function useFetch() {
                     successCallback?.(data);
                     break;
                 case 401:
+                    header.setDefault();
+                    header.setGuestMenu();
                     modal.setAuto(modalOption.title, modalOption.content, () => {
                         auth.handleAuthModal({
                             isOpen: true,

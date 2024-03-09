@@ -6,7 +6,6 @@ import Spinner from "../common/Spinner";
 export default function SignUpForm() {
     const fetch = useFetch();
     const {modal, auth} = useContext(ContextStore);
-    const [loading, setLoading] = useState(false);
     const [isAvailable, setIsAvailable] = useState(false);
     const [formData, setFormData] = useState<SignUp>({
         email: '',
@@ -21,7 +20,6 @@ export default function SignUpForm() {
     };
     const handleSubmit = async (e: FormEvent) => {
         e.preventDefault();
-        setLoading(true);
         if (isAvailable) {
             const verifyResult: FetchResult = await fetch.post('/api/v1/code/mail/verify', {
                 code: formData.code,
@@ -42,7 +40,6 @@ export default function SignUpForm() {
             const {password, passwordCheck} = formData;
             if (password !== passwordCheck) {
                 modal.setAuto('비밀번호 불일치', '동일한 비밀번호를 입력해주세요.');
-                setLoading(false);
                 return;
             }
             const result: FetchResult = await fetch.post('/api/v1/code/mail/send', {
@@ -56,9 +53,7 @@ export default function SignUpForm() {
                 setIsAvailable(true);
             });
         }
-        setLoading(false);
     };
-    if (loading) return <Spinner/>
     return (
         <>
             <div className="z-800 flex fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full justify-center items-center">

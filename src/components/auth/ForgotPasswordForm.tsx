@@ -23,7 +23,6 @@ export default function ForgotPasswordForm() {
         code: '',
         email: ''
     });
-    const [loading, setLoading] = useState(false);
     const {modal, auth} = useContext(ContextStore);
     useEffect(() => {
         return () => {
@@ -60,14 +59,12 @@ export default function ForgotPasswordForm() {
     const handleSubmit = async (e: FormEvent) => {
         e.preventDefault();
         const isEmailStep = formState.endpoint === 'send';
-        setLoading(true);
         const {email, authType, code} = formState;
         const result: FetchResult = await fetch.post(`/api/v1/code/mail/${formState.endpoint}`, {
             email,
             authType,
             code
         });
-        setLoading(false);
         const {title,content} = result.modal;
         fetch.resultHandler(result,(data) => {
             setRemainSeconds(data);
@@ -98,9 +95,6 @@ export default function ForgotPasswordForm() {
         auth.handleAuthModal({
             authFormType: "SignIn"
         })
-    }
-    if (loading) {
-        return <Spinner/>
     }
     return (
         <>

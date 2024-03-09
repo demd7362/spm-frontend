@@ -1,6 +1,16 @@
 import {Dispatch, ReactElement, SetStateAction} from 'react';
 import {AuthModalState} from "../hooks/useAuth";
+
 declare global {
+
+    type UserInfo = {
+        uiNum?: number;
+        uiEmail: string;
+        uiPwd?: string;
+        uiCreated?: string;
+        uiRole?: string;
+        uiPoint: number;
+    }
 
     type SignIn = {
         email: string;
@@ -53,6 +63,7 @@ declare global {
         totalPages: number;
         content?: any[];
     }
+
     interface BoardPagination extends CommonPagination {
         content: BoardInfo[];
     }
@@ -86,33 +97,41 @@ declare global {
     };
 
 
-
     interface ModalContext {
         props: UseModal;
         setProps: Dispatch<SetStateAction<UseModal>>;
+
         open(): void;
-        close(callback?:()=>void): void;
-        setAuto(title: string, content: string, onClose?:() => void): void;
-        confirm(title: string, content: string, onConfirm: () => void,onClose?: () => void): void;
+
+        close(callback?: () => void): void;
+
+        setAuto(title: string, content: string, onClose?: () => void): void;
+
+        confirm(title: string, content: string, onConfirm: () => void, onClose?: () => void): void;
     }
 
     interface HeaderContext {
         menu: ReactElement;
         authMenu: ReactElement;
         setMenu: Dispatch<SetStateAction<ReactElement>>;
+
         setDefault(): void;
+
         setUserMenu(): void;
+
         setGuestMenu(): void;
     }
+
     interface AuthContext {
-        authModalState:AuthModalState,
+        authModalState: AuthModalState,
         close: () => void;
         open: () => void;
-        handleAuthModal: (authModalState:AuthModalState) => void;
+        handleAuthModal: (authModalState: AuthModalState) => void;
         jwt: Jwt;
-        saveToken: (Jwt:Jwt) => void;
+        saveToken: (Jwt: Jwt) => void;
         deleteToken: () => void;
     }
+
     type OCIType = '01' | '02'
 
     type OCIRequest = {
@@ -122,16 +141,15 @@ declare global {
         type: OCIType;
     }
     type BoardCommentProps = {
-        bcNum:number;
-        bcUserId?:string;
-        bcBoardNum:number;
-        bcParentNum?:number;
-        bcContent:string;
-        bcDeep:number;
-        bcCreated?:string;
-        bcChanged?:string;
+        bcNum: number;
+        bcUserId?: string;
+        bcBoardNum: number;
+        bcParentNum?: number;
+        bcContent: string;
+        bcDeep: number;
+        bcCreated?: string;
+        bcChanged?: string;
     }
-
 
 
 }

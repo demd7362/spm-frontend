@@ -16,7 +16,6 @@ export default function BoardCommentView() {
     const {num, page} = params;
     const {modal} = useContext(ContextStore);
     const navigate = useNavigate();
-    const [loading, setLoading] = useState(false);
 
     const {
         pagination,
@@ -27,7 +26,6 @@ export default function BoardCommentView() {
     } = usePagination<BoardCommentPagination>(Number(page || '1'), PAGE_SIZE, BOTTOM_SIZE);
     const [comment, setComment] = useState<string>('');
     const getComments = useCallback(async () => {
-        setLoading(true);
         const result = await fetch.get(`/api/v1/board/comment/${num}/${pagination.page}/${pagination.pageSize}`);
         fetch.resultHandler(result, (data) => {
             data.content.sort((a:BoardCommentProps,b:BoardCommentProps) => a.bcNum - b.bcNum);
@@ -37,7 +35,6 @@ export default function BoardCommentView() {
                 totalPages: data.totalPages
             }))
             navigate(`/board/view/${num}/${pagination.page || 1}`, {replace: true});
-            setLoading(false);
         })
     }, [pagination.page])
     useEffect(() => {
@@ -114,7 +111,6 @@ export default function BoardCommentView() {
     }, [])
 
 
-    if (loading) return <Spinner/>
     return (
         <div className="p-4">
             <div className="mb-4">
