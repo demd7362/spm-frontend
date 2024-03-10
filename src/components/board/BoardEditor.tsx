@@ -3,32 +3,35 @@ import ReactQuill from 'react-quill';
 import {ContextStore} from '../../router/AppRouter';
 import useFetch from "../../hooks/useFetch";
 import {useNavigate, useParams} from "react-router-dom";
+import StringUtils from "../../utils/StringUtils";
 
 const MB = 10;
 const MAX_FILE_SIZE = 1048576 * MB;
 
 export default function BoardEditor() {
     const params = useParams();
+    const [hashes, setHashes] = useState<string[]>([]);
     const {num} = params;
     const quillRef = useRef<ReactQuill>(null);
     const [data, setData] = useState<BoardInfo>({
         biTitle: '',
         biContent: ''
     });
-    const {header, modal,auth} = useContext(ContextStore);
+    const {header, modal, auth} = useContext(ContextStore);
     const fetch = useFetch();
     const navigate = useNavigate();
-    const handleSubmit = useCallback(() => {
+    const handleSubmit = useCallback(async () => {
         let url = num === undefined ? '/board/insert' : '/board/update';
         url = '/api/v1' + url;
         const method = num === undefined ? 'post' : 'patch';
-        fetch[method](url, data)
-            .then(result => {
-                fetch.resultHandler(result, () => {
-                    navigate('/board/1');
-                });
-            })
-    }, [data, num,auth.jwt])
+        const result = await fetch[method](url, {
+            ...data,
+            hashes
+        });
+        fetch.resultHandler(result, () => {
+            navigate('/board/1');
+        });
+    }, [data, num, auth.jwt])
     useEffect(() => {
         header.setMenu(() => {
             return <button onClick={handleSubmit}>[작성 완료]</button>
@@ -56,8 +59,8 @@ export default function BoardEditor() {
         input.addEventListener('change', async () => {
             const file = input.files?.[0];
             if (file === undefined) return;
-            if(!file.type.includes('image')){
-                modal.setAuto('이미지 업로드','이미지만 업로드 가능합니다.', () => {
+            if (!file.type.includes('image')) {
+                modal.setAuto('이미지 업로드', '이미지만 업로드 가능합니다.', () => {
                     input.click();
                 })
                 return;
@@ -73,12 +76,16 @@ export default function BoardEditor() {
             reader.addEventListener('load', async () => {
                 if (typeof reader.result === "string") {
                     const base64 = reader.result.replace(/^data:.+;base64,/, '');
+
+                    const hash = StringUtils.generateRandomHash();
                     const ociRequest: OCIRequest = {
                         base64,
-                        name: file.name,
+                        originalName: file.name,
                         size: file.size,
-                        type: '01'
+                        type: '01',
+                        hash
                     }
+                    setHashes(prev => [...prev, hash]);
                     const result = await fetch.post('/api/v1/oci/upload', ociRequest);
                     fetch.resultHandler(result, (data) => {
                         // @ts-ignore

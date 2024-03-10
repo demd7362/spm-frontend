@@ -7,6 +7,7 @@ import BoardComment from "./BoardComment";
 import {useNavigate, useParams} from "react-router-dom";
 import Pagination from "../common/Pagination";
 import usePagination from "../../hooks/usePagination";
+import StringUtils from "../../utils/StringUtils";
 
 const BOTTOM_SIZE = 5;
 const PAGE_SIZE = 10;
@@ -16,7 +17,7 @@ export default function BoardCommentView() {
     const {num, page} = params;
     const {modal} = useContext(ContextStore);
     const navigate = useNavigate();
-
+    const [hashes, setHashes] = useState<string[]>([]);
     const {
         pagination,
         setPagination,
@@ -40,34 +41,20 @@ export default function BoardCommentView() {
     useEffect(() => {
         getComments();
     }, [pagination.page])
-
-    const handleCommentSubmit = useCallback(async () => {
-        const result: FetchResult = await fetch.post<BoardCommentProps>('/api/v1/board/comment/insert', {
+    const handleCommentSubmit = async (comment: string) => {
+        const result: FetchResult = await fetch.post('/api/v1/board/comment/insert', {
             bcContent: comment,
             bcBoardNum: Number(num),
             bcDeep: 1,
-            bcNum: 1
+            bcNum: 1,
+            hashes
         });
         fetch.resultHandler(result, async () => {
             await getComments();
             setComment('');
+            setHashes([]);
         });
-    }, [comment])
-    // useEffect(() => {
-    //     if (base64Image !== '') {
-    //         const imageElement = `<img src="${base64Image}"/>`;
-    //         fetch.post('/api/v1/board/comment/insert', {
-    //             bcContent: imageElement,
-    //             bcBoardNum: Number(num),
-    //             bcDeep: 1,
-    //         }).then(result => {
-    //             fetch.resultHandler(result, async () => {
-    //                 await getComments();
-    //                 setBase64Image('');
-    //             });
-    //         })
-    //     }
-    // }, [base64Image])
+    }
     const handleAddImage = useCallback(() => {
         const input = document.createElement('input');
         input.setAttribute('type', 'file');
@@ -89,17 +76,21 @@ export default function BoardCommentView() {
                 reader.addEventListener('load', async () => {
                     if (typeof reader.result === "string") {
                         const base64 = reader.result.replace(/^data:.+;base64,/, '');
+
+                        const hash = StringUtils.generateRandomHash();
                         const ociRequest: OCIRequest = {
                             base64,
-                            name: file.name,
+                            originalName: file.name,
                             size: file.size,
-                            type: '02'
+                            type: '02',
+                            hash
                         }
+                        setHashes(prev => [...prev, hash]);
                         const result = await fetch.post('/api/v1/oci/upload', ociRequest);
                         fetch.resultHandler(result, (data) => {
                             const newComment = `<img src="${data}">`;
                             setComment(newComment);
-                            handleCommentSubmit();
+                            handleCommentSubmit(newComment);
                         });
                     }
                 })
@@ -126,7 +117,7 @@ export default function BoardCommentView() {
 
             <textarea rows={3} className="w-full p-2 border border-gray-300 rounded" value={comment} onChange={(e) => setComment(e.target.value)}/>
             <div className={'flex gap-2'}>
-                <button onClick={handleCommentSubmit} className="mt-2 px-4 py-2 text-sm font-medium text-gray-100 bg-purple-600 rounded-lg shadow hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-opacity-50 transition duration-300 ease-in-out">
+                <button onClick={() => handleCommentSubmit(comment)} className="mt-2 px-4 py-2 text-sm font-medium text-gray-100 bg-purple-600 rounded-lg shadow hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-opacity-50 transition duration-300 ease-in-out">
                     댓글 달기
                 </button>
                 <img onClick={handleAddImage} src={addImage} alt="Add Image" className={'w-10 h-10 mt-2 rounded-3xl cursor-pointer'}/>

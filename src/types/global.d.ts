@@ -136,9 +136,10 @@ declare global {
 
     type OCIRequest = {
         base64: string;
-        name: string;
+        originalName: string;
         size: number;
         type: OCIType;
+        hash: string;
     }
     type BoardCommentProps = {
         bcNum: number;

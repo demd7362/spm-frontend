@@ -1,7 +1,6 @@
 import React, {useContext} from "react";
 import {ContextStore} from "../../router/AppRouter";
-import {IoAccessibility, IoAddCircle, IoLogIn, IoLogInOutline, IoPersonAddOutline} from "react-icons/io5";
-import {PiSignIn} from "react-icons/pi";
+import {IoLogInOutline, IoPersonAddOutline} from "react-icons/io5";
 
 const commonProps = {className: 'hover:text-gray-300'};
 export default function GuestMenu(){
