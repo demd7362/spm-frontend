@@ -29,7 +29,8 @@ export default function BoardCommentView() {
     const getComments = useCallback(async () => {
         const result = await fetch.get(`/api/v1/board/comment/${num}/${pagination.page}/${pagination.pageSize}`);
         fetch.resultHandler(result, (data) => {
-            data.content.sort((a:BoardCommentProps,b:BoardCommentProps) => a.bcNum - b.bcNum);
+            console.log(data);
+            data.content.sort((a:BoardCommentProps,b:BoardCommentProps) => a.num - b.num);
             setPagination(prev => ({
                 ...prev,
                 content: data.content,
@@ -43,10 +44,9 @@ export default function BoardCommentView() {
     }, [pagination.page])
     const handleCommentSubmit = async (comment: string) => {
         const result: FetchResult = await fetch.post('/api/v1/board/comment/insert', {
-            bcContent: comment,
-            bcBoardNum: Number(num),
-            bcDeep: 1,
-            bcNum: 1,
+            content: comment,
+            boardNum: Number(num),
+            deep: 1,
             hashes
         });
         fetch.resultHandler(result, async () => {
@@ -106,7 +106,7 @@ export default function BoardCommentView() {
         <div className="p-4">
             <div className="mb-4">
                 {pagination.content.map(comment => {
-                    return <BoardComment key={comment.bcNum} {...comment}/>
+                    return <BoardComment key={comment.num} {...comment}/>
                 })}
             </div>
             <div className={'container mx-auto py-2'}>

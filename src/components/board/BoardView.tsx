@@ -22,7 +22,7 @@ export default function BoardView() {
                 if(prev !== null){
                     return {
                         ...prev,
-                        brCount: data
+                        count: data
                     }
                 } else {
                     return null;
@@ -35,14 +35,14 @@ export default function BoardView() {
         fetch.get(`/api/v1/board/view/${num}?recommend=true`)
             .then((result:FetchResult) => {
                 fetch.resultHandler(result,(data:BoardInfo)=> {
-                    const {biContent,biTitle,biUserId,biChanged,biCreated,brCount} = data;
+                    const {content,title,email,changed,created,count} = data;
                     setData({
-                        biContent,
-                        biTitle,
-                        biUserId,
-                        biCreated,
-                        biChanged,
-                        brCount
+                        content,
+                        title,
+                        email,
+                        created,
+                        changed,
+                        count
                     });
                     const handleClickModify = async ()=>{
                         navigate(`/board/post/${num}`)
@@ -71,7 +71,7 @@ export default function BoardView() {
     }, []);
     const renderCreateDate = useCallback(()=> {
         if(!data) return null;
-        const {years,months,days,hours,minutes,seconds} = dateUtil.parseDate(data.biCreated);
+        const {years,months,days,hours,minutes,seconds} = dateUtil.parseDate(data.created);
         return (
             <>
                 <p className="text-sm font-light">{`${years}년 ${months}월 ${days}일 ${hours}시 ${minutes}분 ${seconds}초`}</p>
@@ -83,12 +83,12 @@ export default function BoardView() {
     return (
         <Suspense fallback={<Spinner/>}>
             <div className="container mx-auto p-4 bg-white rounded-lg h-screen">
-                <h1 className="text-2xl font-bold mb-4 text-black">{data.biTitle}</h1>
+                <h1 className="text-2xl font-bold mb-4 text-black">{data.title}</h1>
                 <div className="w-full max-w-[calc(100%-1rem)]">
                     <div className="border rounded-lg p-4 shadow-md">
-                        <div dangerouslySetInnerHTML={{ __html: data.biContent }} className="text-gray-700" />
+                        <div dangerouslySetInnerHTML={{ __html: data.content }} className="text-gray-700" />
                         <div className="text-right mt-4">
-                            <p className="text-sm font-light">작성자: {data.biUserId}</p>
+                            <p className="text-sm font-light">작성자: {data.email}</p>
                             {renderCreateDate()}
                         </div>
                     </div>
@@ -97,7 +97,7 @@ export default function BoardView() {
                             onClick={handleRecommand}
                             className="mt-4 bg-amber-700 hover:bg-amber-800 text-white font-bold py-2 px-4 rounded"
                         >
-                            추천 {data.brCount}
+                            추천 {data.count}
                         </button>
                         <button
                             onClick={() => navigate('/board/1')}

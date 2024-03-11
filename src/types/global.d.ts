@@ -4,12 +4,12 @@ import {AuthModalState} from "../hooks/useAuth";
 declare global {
 
     type UserInfo = {
-        uiNum?: number;
-        uiEmail: string;
-        uiPwd?: string;
-        uiCreated?: string;
-        uiRole?: string;
-        uiPoint: number;
+        num?: number;
+        email: string;
+        password?: string;
+        created?: string;
+        role?: string;
+        point: number;
     }
 
     type SignIn = {
@@ -29,14 +29,14 @@ declare global {
         tokenExpiresIn: number;
     };
     type BoardInfo = {
-        biNum?: number;
-        biUserId?: string;
-        biContent: string;
-        biTitle: string;
-        biCreated?: string;
-        biChanged?: string;
-        biActive?: number;
-        brCount?: number;
+        num?: number;
+        email?: string;
+        content: string;
+        title: string;
+        created?: string;
+        changed?: string;
+        active?: number;
+        count?: number;
     };
 
     type DateTime = {
@@ -142,14 +142,15 @@ declare global {
         hash: string;
     }
     type BoardCommentProps = {
-        bcNum: number;
-        bcUserId?: string;
-        bcBoardNum: number;
-        bcParentNum?: number;
-        bcContent: string;
-        bcDeep: number;
-        bcCreated?: string;
-        bcChanged?: string;
+        num: number;
+        email?: string;
+        boardNum: number;
+        parentNum?: number;
+        content: string;
+        deep: number;
+        created?: string;
+        changed?: string;
+        hashes?: string[];
     }
 
 

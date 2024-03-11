@@ -2,6 +2,9 @@ import dateUtil from "../../utils/dateUtils";
 import {Dispatch, SetStateAction, useContext, useEffect, useState} from "react";
 import useFetch from "../../hooks/useFetch";
 import {ContextStore} from "../../router/AppRouter";
+import {IoPerson} from "react-icons/io5";
+import {AiOutlineArrowLeft} from "react-icons/ai";
+import {FiCornerLeftUp} from "react-icons/fi";
 const REPLY_MAXIMUM = 5;
 export default function BoardComment(boardComment:BoardCommentProps){
     const fetch = useFetch();
@@ -9,26 +12,27 @@ export default function BoardComment(boardComment:BoardCommentProps){
     const [editable,setEditable] = useState(false);
     const [replyMode, setReplyMode] = useState(false);
     const [replyComment,setReplyComment] = useState<BoardCommentProps>({
-        bcContent: '',
-        bcBoardNum: boardComment.bcBoardNum,
-        bcDeep: boardComment.bcDeep + 1,
-        bcParentNum: boardComment.bcNum,
-        bcNum: 1
+        num: 1,
+        content: '',
+        boardNum: boardComment.boardNum,
+        deep: boardComment.deep + 1,
+        parentNum: boardComment.num,
+        hashes: []
     });
     const [comments, setComments] = useState<BoardCommentProps[]>([]);
     const [comment,setComment] = useState<BoardCommentProps>(boardComment);
 
-    const {bcNum, bcParentNum,bcChanged,bcCreated, bcContent, bcUserId} = comment;
-    const isModified = bcCreated !== bcChanged;
-    const targetDate = isModified ? bcChanged : bcCreated;
+    const {num, parentNum,changed,created, content, email} = comment;
+    const isModified = created !== changed;
+    const targetDate = isModified ? changed : created;
     const { years, months, days, hours, minutes } = dateUtil.parseDate(targetDate);
     let formattedDate = `${years}년 ${months}월 ${days}일 ${hours}시 ${minutes}분`;
     if(isModified){
-        formattedDate += '(수정됨)';
+        formattedDate += ' (수정됨)';
     }
     useEffect(()=> {
         if(!replyMode){
-            fetch.get(`/api/v1/board/comment/reply/${bcNum}`)
+            fetch.get(`/api/v1/board/comment/reply/${num}`)
                 .then(result => {
                     setComments(result.data);
                 })
@@ -41,7 +45,7 @@ export default function BoardComment(boardComment:BoardCommentProps){
         setReplyMode(!replyMode);
     }
     const handleSubmitReply = async () => {
-        if(replyComment.bcDeep >= REPLY_MAXIMUM){
+        if(replyComment.deep >= REPLY_MAXIMUM){
             modal.setAuto('댓글 제한','더 이상 대댓글은 달 수 없어요.');
             return;
         }
@@ -50,7 +54,7 @@ export default function BoardComment(boardComment:BoardCommentProps){
             toggleReplyMode();
             setReplyComment(prev => ({
                 ...prev,
-                bcContent: ''
+                content: ''
             }))
         });
     }
@@ -61,11 +65,11 @@ export default function BoardComment(boardComment:BoardCommentProps){
     }
     const handleDelete = async ()=> {
         modal.confirm('댓글 삭제','댓글을 정말로 삭제할까요?',async () => {
-            const result = await fetch.$delete(`/api/v1/board/comment/delete/${bcNum}`);
+            const result = await fetch.$delete(`/api/v1/board/comment/delete/${num}`);
             fetch.resultHandler(result,() => {
                 setComment(prev => ({
                     ...prev,
-                    bcContent: '삭제되었습니다.'
+                    content: '삭제되었습니다.'
                 }))
             });
         })
@@ -78,18 +82,22 @@ export default function BoardComment(boardComment:BoardCommentProps){
                     {editable ?
                         <input
                         type="text"
-                        value={bcContent}
+                        value={content}
                         onChange={(e)=>{
                             setComment(prev => ({
                                 ...prev,
-                                bcContent: e.target.value
+                                content: e.target.value
                             }))
                         }}
                         className={`text-sm py-2 px-3 bg-gray-50 text-gray-700 mb-2 focus:ring-2 focus:ring-blue-300`}
                         // editable이 false일 경우 focus 비활성화
                         tabIndex={1}
                     />
-                        : <div className={`text-sm py-2 px-3 bg-gray-50 text-gray-700 mb-2 focus:ring-2 focus:ring-blue-300`} dangerouslySetInnerHTML={{__html : bcContent}}></div>
+                        :
+                        <div className='flex text-xs text-red-500'>
+                            {boardComment.deep > 1 ? <FiCornerLeftUp/> : <></>}
+                            <div className={`text-sm py-2 px-3 bg-gray-50 text-gray-700 mb-2 focus:ring-2 focus:ring-blue-300`} dangerouslySetInnerHTML={{__html: content}}></div>
+                        </div>
                     }
                 </div>
                 <div className="flex flex-shrink-0 space-x-2">
@@ -114,11 +122,11 @@ export default function BoardComment(boardComment:BoardCommentProps){
                 <div className="mt-4">
                     <textarea
                         className="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-300"
-                        value={replyComment.bcContent}
+                        value={replyComment.content}
                         onChange={e => {
                             setReplyComment(prev => ({
                                 ...prev,
-                                bcContent: e.target.value
+                                content: e.target.value
                             }))
                         }}
                         rows={3}
@@ -132,10 +140,10 @@ export default function BoardComment(boardComment:BoardCommentProps){
                 </div>
             )}
             <div className="text-xs font-medium text-gray-500 mt-2">
-                {bcUserId} {formattedDate}
+                {email} {formattedDate}
             </div>
             {comments.map(comment => {
-                return <BoardComment key={comment.bcNum} {...comment} />
+                return <BoardComment key={comment.num} {...comment} />
             })}
         </div>
     )

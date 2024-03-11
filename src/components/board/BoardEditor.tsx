@@ -14,8 +14,8 @@ export default function BoardEditor() {
     const {num} = params;
     const quillRef = useRef<ReactQuill>(null);
     const [data, setData] = useState<BoardInfo>({
-        biTitle: '',
-        biContent: ''
+        title: '',
+        content: ''
     });
     const {header, modal, auth} = useContext(ContextStore);
     const fetch = useFetch();
@@ -133,13 +133,13 @@ export default function BoardEditor() {
     const handleTitleChange = (e: ChangeEvent<HTMLInputElement>) => {
         setData(prev => ({
             ...prev,
-            biTitle: e.target.value
+            title: e.target.value
         }))
     };
     const handleContentChange = (content: string) => {
         setData(prev => ({
             ...prev,
-            biContent: content
+            content
         }))
 
     };
@@ -147,8 +147,8 @@ export default function BoardEditor() {
 
     return (
         <div className={'p-2'}>
-            <input type="text" onChange={handleTitleChange} value={data.biTitle} className={'w-full max-w-[calc(100%-1rem)] p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-800 m-2 focus:border-transparent'} placeholder="제목을 입력하세요"/>
-            <ReactQuill ref={quillRef} className={'m-2 h-80vh bg-white'} value={data.biContent} onChange={handleContentChange} modules={modules}/>
+            <input type="text" onChange={handleTitleChange} value={data.title} className={'w-full max-w-[calc(100%-1rem)] p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-800 m-2 focus:border-transparent'} placeholder="제목을 입력하세요"/>
+            <ReactQuill ref={quillRef} className={'m-2 h-80vh bg-white'} value={data.content} onChange={handleContentChange} modules={modules}/>
         </div>
     );
 }

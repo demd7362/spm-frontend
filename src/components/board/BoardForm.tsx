@@ -73,8 +73,8 @@ export default function BoardForm() {
     const handlePost = useCallback(async () => {
         navigate('/board/post');
     }, [])
-    const handleClickPost = (biNum: number) => {
-        navigate(`/board/view/${biNum}/1`);
+    const handleClickPost = (num: number) => {
+        navigate(`/board/view/${num}/1`);
     }
     return (
         <>
@@ -97,18 +97,18 @@ export default function BoardForm() {
                 </div>
                 {pagination.content.map((row: BoardInfo) => {
                     const {years, months, days, hours, minutes} =
-                        dateUtil.parseDate(row.biChanged);
+                        dateUtil.parseDate(row.changed);
                     return (
-                        <div className={'bg-amber-50 text-black py-4 px-6 mb-4 rounded-lg shadow-lg transition duration-300 ease-in-out text-lg font-semibold border-2 border-t-amber-100'} key={row.biNum}>
+                        <div className={'bg-amber-50 text-black py-4 px-6 mb-4 rounded-lg shadow-lg transition duration-300 ease-in-out text-lg font-semibold border-2 border-t-amber-100'} key={row.num}>
                             <span className={'text-left py-3 px-4'}>
-                                #{row.biNum}
+                                #{row.num}
                             </span> <span className={'text-left py-3 px-4'}>
-                                ID : {row.biUserId}
+                                ID : {row.email}
                             </span>
                             <span className={'text-left py-3 px-4 cursor-pointer hover:text-gray-300'} onClick={() => {
-                                handleClickPost(row?.biNum ?? 1);
+                                handleClickPost(row?.num ?? 1);
                             }}>
-                                &gt; {row.biTitle}
+                                &gt; {row.title}
                             </span>
                             <span className={'text-left py-3 px-4'}>{`${years}년 ${months}월 ${days}일 ${hours}시 ${minutes}분`}</span>
                         </div>
