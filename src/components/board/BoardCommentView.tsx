@@ -82,7 +82,7 @@ export default function BoardCommentView() {
                             base64,
                             originalName: file.name,
                             size: file.size,
-                            type: '02',
+                            ociType: '02',
                             hash
                         }
                         setHashes(prev => [...prev, hash]);

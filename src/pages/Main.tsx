@@ -29,6 +29,7 @@ const notices: Notice[] = [
 export default function Main(){
     const [position, setPosition] = useState({ x: window.innerWidth / 5, y: window.innerHeight / 5});
     const [visible ,setVisible] = useState(true);
+    const [d ,setD] = useState(1);
     const handleDrag = (e: any, data: any) => {
         setPosition({ x: data.x, y: data.y });
     };

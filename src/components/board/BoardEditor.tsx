@@ -15,7 +15,7 @@ export default function BoardEditor() {
     const quillRef = useRef<ReactQuill>(null);
     const [data, setData] = useState<BoardInfo>({
         title: '',
-        content: ''
+        content: '',
     });
     const {header, modal, auth} = useContext(ContextStore);
     const fetch = useFetch();
@@ -82,7 +82,7 @@ export default function BoardEditor() {
                         base64,
                         originalName: file.name,
                         size: file.size,
-                        type: '01',
+                        ociType: '01',
                         hash
                     }
                     setHashes(prev => [...prev, hash]);

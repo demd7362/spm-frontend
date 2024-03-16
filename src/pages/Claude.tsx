@@ -36,7 +36,6 @@ export default function Claude() {
     const [messages, setMessages] = useState<Message[]>([]);
     const inputRef = useRef<HTMLInputElement>(null);
     const divRef = useRef<HTMLDivElement>(null);
-    const {modal} = useContext(ContextStore);
     const [input, setInput] = useState('');
     const fetch = useFetch();
     const [loading, setLoading] = useState(false);
@@ -56,7 +55,7 @@ export default function Claude() {
         inputRef.current?.focus();
     }
     const handleSendMessage = async () => {
-        if(StringUtils.hasText(input)){
+        if(!StringUtils.hasText(input)){
             return;
         }
         setLoading(true);

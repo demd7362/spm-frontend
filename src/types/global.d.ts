@@ -138,7 +138,7 @@ declare global {
         base64: string;
         originalName: string;
         size: number;
-        type: OCIType;
+        ociType: OCIType;
         hash: string;
     }
     type BoardCommentProps = {

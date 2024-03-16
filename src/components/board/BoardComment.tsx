@@ -1,15 +1,15 @@
 import dateUtil from "../../utils/dateUtils";
-import {Dispatch, SetStateAction, useContext, useEffect, useState} from "react";
+import {memo, useContext, useEffect, useState} from "react";
 import useFetch from "../../hooks/useFetch";
 import {ContextStore} from "../../router/AppRouter";
-import {IoPerson} from "react-icons/io5";
-import {AiOutlineArrowLeft} from "react-icons/ai";
 import {FiCornerLeftUp} from "react-icons/fi";
+import StringUtils from "../../utils/StringUtils";
+
 const REPLY_MAXIMUM = 5;
-export default function BoardComment(boardComment:BoardCommentProps){
+function BoardComment(boardComment:BoardCommentProps){
+    const [editable,setEditable] = useState(false);
     const fetch = useFetch();
     const {modal} = useContext(ContextStore);
-    const [editable,setEditable] = useState(false);
     const [replyMode, setReplyMode] = useState(false);
     const [replyComment,setReplyComment] = useState<BoardCommentProps>({
         num: 1,
@@ -30,20 +30,20 @@ export default function BoardComment(boardComment:BoardCommentProps){
     if(isModified){
         formattedDate += ' (수정됨)';
     }
+    const fetchReply = async () => {
+        const result = await fetch.get(`/api/v1/board/comment/reply/${num}`);
+        setComments(result.data);
+    }
     useEffect(()=> {
-        if(!replyMode){
-            fetch.get(`/api/v1/board/comment/reply/${num}`)
-                .then(result => {
-                    setComments(result.data);
-                })
-        }
-    },[replyMode])
+        fetchReply();
+    },[])
     const toggleEditable = () => {
         setEditable(!editable);
     }
     const toggleReplyMode = () => {
         setReplyMode(!replyMode);
     }
+
     const handleSubmitReply = async () => {
         if(replyComment.deep >= REPLY_MAXIMUM){
             modal.setAuto('댓글 제한','더 이상 대댓글은 달 수 없어요.');
@@ -51,29 +51,23 @@ export default function BoardComment(boardComment:BoardCommentProps){
         }
         const result = await fetch.post('/api/v1/board/comment/insert',replyComment);
         fetch.resultHandler(result,() => {
-            toggleReplyMode();
-            setReplyComment(prev => ({
-                ...prev,
-                content: ''
-            }))
+            fetchReply();
+            if(replyMode){
+                setReplyMode(false);
+            }
         });
     }
     const handlePatch = async ()=> {
         const result = await fetch.patch<BoardCommentProps>(`/api/v1/board/comment/update`,comment);
-        fetch.resultHandler(result);
-        toggleEditable();
+        fetch.resultHandler(result, () => toggleEditable());
     }
-    const handleDelete = async ()=> {
-        modal.confirm('댓글 삭제','댓글을 정말로 삭제할까요?',async () => {
+    const handleDelete = async () => {
+        modal.confirm('댓글 삭제', '댓글을 정말로 삭제할까요?', async () => {
             const result = await fetch.$delete(`/api/v1/board/comment/delete/${num}`);
-            fetch.resultHandler(result,() => {
-                setComment(prev => ({
-                    ...prev,
-                    content: '삭제되었습니다.'
-                }))
+            fetch.resultHandler(result, () => {
+                modal.setAuto(result.modal.title, result.modal.content);
             });
-        })
-
+        });
     }
     return (
         <div className="p-4 my-4 rounded-lg border border-gray-200 bg-gray-50 shadow-sm">
@@ -111,11 +105,13 @@ export default function BoardComment(boardComment:BoardCommentProps){
                     <button onClick={handleDelete} className="px-2 py-1 text-xs font-semibold text-white bg-red-500 rounded hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-300 focus:ring-opacity-50">
                         삭제
                     </button>
-                    <button onClick={toggleReplyMode} className="px-2 py-1 text-xs font-semibold text-white bg-green-500 rounded hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-300 focus:ring-opacity-50">
+                    <button onClick={() => {
+                        toggleReplyMode();
+                        fetchReply();
+                    }} className="px-2 py-1 text-xs font-semibold text-white bg-green-500 rounded hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-300 focus:ring-opacity-50">
                         댓글 달기
                     </button>
                 </div>
-
             </div>
 
             {replyMode && (
@@ -142,9 +138,10 @@ export default function BoardComment(boardComment:BoardCommentProps){
             <div className="text-xs font-medium text-gray-500 mt-2">
                 {email} {formattedDate}
             </div>
-            {comments.map(comment => {
-                return <BoardComment key={comment.num} {...comment} />
+            {comments.map((comment) => {
+                return <BoardComment key={StringUtils.generateRandomHash(4)} {...comment} />
             })}
         </div>
     )
 }
+export default memo(BoardComment);

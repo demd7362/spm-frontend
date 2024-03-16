@@ -42,7 +42,7 @@ export default function BoardView() {
                         email,
                         created,
                         changed,
-                        count
+                        count,
                     });
                     const handleClickModify = async ()=>{
                         navigate(`/board/post/${num}`)
