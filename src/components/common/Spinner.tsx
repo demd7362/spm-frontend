@@ -1,5 +1,4 @@
 import { ClipLoader } from 'react-spinners';
-import { CSSProperties, useState } from 'react';
 
 type SpinnerProps = {
     loading: boolean

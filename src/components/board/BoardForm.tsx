@@ -1,7 +1,6 @@
 import useFetch from '../../hooks/useFetch';
 import React, {ChangeEvent, Fragment, useCallback, useContext, useEffect, useState,} from 'react';
 import dateUtil from '../../utils/dateUtils';
-import Spinner from '../common/Spinner';
 import Pagination from '../common/Pagination';
 import {useNavigate, useParams} from 'react-router-dom';
 import usePagination from "../../hooks/usePagination";
@@ -99,13 +98,13 @@ export default function BoardForm() {
                     const {years, months, days, hours, minutes} =
                         dateUtil.parseDate(row.changed);
                     return (
-                        <div className={'bg-amber-50 text-black py-4 px-6 mb-4 rounded-lg shadow-lg transition duration-300 ease-in-out text-lg font-semibold border-2 border-t-amber-100'} key={row.num}>
+                        <div className={'overflow-hidden whitespace-nowrap bg-amber-50 text-black py-4 px-6 mb-4 rounded-lg shadow-lg transition duration-300 ease-in-out text-lg font-semibold border-2 border-t-amber-100'} key={row.num}>
                             <span className={'text-left py-3 px-4'}>
                                 #{row.num}
                             </span> <span className={'text-left py-3 px-4'}>
                                 ID : {row.email}
                             </span>
-                            <span className={'text-left py-3 px-4 cursor-pointer hover:text-gray-300'} onClick={() => {
+                            <span className='truncate text-left py-3 px-4 cursor-pointer hover:text-gray-300' onClick={() => {
                                 handleClickPost(row?.num ?? 1);
                             }}>
                                 &gt; {row.title}

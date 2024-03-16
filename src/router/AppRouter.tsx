@@ -7,6 +7,7 @@ import Modal from "../components/common/Modal";
 import Header from "../components/common/Header";
 import AuthForm from "../components/auth/AuthForm";
 import Spinner from "../components/common/Spinner";
+import Claude from "../pages/Claude";
 
 
 const modalDefaultValue: ModalContext = {
@@ -79,10 +80,11 @@ export default function AppRouter() {
                     <Routes>
                         <Route path="/" element={<Main />} />
                         <Route path="/board/:page" element={<Board />}/>
-                        <Route path="/board/post" element={<BoardPost />} />
-                        <Route path="/board/post/:num" element={<BoardPost />} />
+                        <Route path="/chat" element={<Claude/>}/>
                         <Route path="/board/view/:num" element={<BoardView/>}/>
                         <Route path="/board/view/:num/:page" element={<BoardView/>}/>
+                        <Route path="/board/post" element={<BoardPost />} />
+                        <Route path="/board/post/:num" element={<BoardPost />} />
                         <Route path="/profile" element={<Profile/>}/>
                         <Route path="*" element={<NotFound />} />
                     </Routes>

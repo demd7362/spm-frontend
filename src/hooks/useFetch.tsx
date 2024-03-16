@@ -67,6 +67,7 @@ export default function useFetch() {
         (
             {modal: modalOption, statusCode, status, data}: FetchResult,
             successCallback?: (data?: any) => void,
+            failureCallback?: (data?: any) => void
         ) => {
             switch (statusCode) {
                 case 200:
@@ -90,6 +91,7 @@ export default function useFetch() {
                     break;
                 default:
                     modal.setAuto(modalOption.title, modalOption.content);
+                    failureCallback?.();
             }
         },
         [],

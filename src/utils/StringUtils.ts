@@ -8,6 +8,12 @@ const generateRandomHash = (length = 16) => {
     return hashHex;
 }
 
+const hasText = (str: string | null | undefined) => {
+    return str && str.trim() !== '';
+}
+
+// eslint-disable-next-line import/no-anonymous-default-export
 export default {
-    generateRandomHash
+    generateRandomHash,
+    hasText
 }

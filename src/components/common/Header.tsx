@@ -11,7 +11,7 @@ export default function Header() {
             <div className="container mx-auto flex justify-between items-center py-4 px-6">
                 <Link to={'/'} className='text-black font-extrabold text-2xl font-serif'>SPM Project</Link>
                 <div className="text-black flex space-x-4">
-                    {/*<Link to={'/'} className="hover:underline">메인</Link>*/}
+                    <Link to={'/chat'} className="hover:underline">AI Chat</Link>
                     <Link to={'/board/1'} className="hover:underline">게시판</Link>
                     {header.menu}
                 </div>
