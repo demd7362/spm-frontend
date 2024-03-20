@@ -50,11 +50,15 @@ function BoardComment(boardComment:BoardCommentProps){
             return;
         }
         const result = await fetch.post('/api/v1/board/comment/insert',replyComment);
-        fetch.resultHandler(result,() => {
-            fetchReply();
+        fetch.resultHandler(result,async () => {
+            await fetchReply();
             if(replyMode){
                 setReplyMode(false);
             }
+            setReplyComment(prev => ({
+                ...prev,
+                content :''
+            }));
         });
     }
     const handlePatch = async ()=> {

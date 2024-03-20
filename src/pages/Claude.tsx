@@ -50,7 +50,7 @@ export default function Claude() {
     useEffect(() => {
         divRef.current?.scrollTo(0, divRef.current?.scrollHeight);
     }, [messages]);
-    const handleFinally = () => {
+    const handleAfterSendMessage = () => {
         setLoading(false);
         inputRef.current?.focus();
     }
@@ -72,11 +72,11 @@ export default function Claude() {
             const role = 'assistant';
             const {text} = data.content?.[0];
             setMessages(prev => [...prev, {role, content: text}]);
-            handleFinally();
+            handleAfterSendMessage();
         }, () => {
             setMessages(prev => [...prev.slice(0, prev.length - 1)]);
             console.log(messages);
-            handleFinally();
+            handleAfterSendMessage();
         });
     }
     const renderChat = () => {
