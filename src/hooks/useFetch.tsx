@@ -1,13 +1,12 @@
 import {useCallback, useContext, useMemo, useState} from 'react';
 import {ContextStore} from '../router/AppRouter';
 import {useLocation, useNavigate} from 'react-router-dom';
-import useAuth from "./useAuth";
 
 const PREFIX = process.env.REACT_APP_API_URL;
 
 export default function useFetch() {
     const navigate = useNavigate();
-    const {modal, auth, header} = useContext(ContextStore);
+    const {modal, auth, menu} = useContext(ContextStore);
     const defaultHeaders = useMemo(
         () => {
             return {
@@ -74,8 +73,7 @@ export default function useFetch() {
                     successCallback?.(data);
                     break;
                 case 401:
-                    header.setDefault();
-                    header.setGuestMenu();
+                    menu.setGuestMenu();
                     modal.setAuto(modalOption.title, modalOption.content, () => {
                         auth.handleAuthModal({
                             isOpen: true,

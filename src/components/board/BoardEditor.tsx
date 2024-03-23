@@ -17,7 +17,7 @@ export default function BoardEditor() {
         title: '',
         content: '',
     });
-    const {header, modal, auth} = useContext(ContextStore);
+    const {menu, modal, auth} = useContext(ContextStore);
     const fetch = useFetch();
     const navigate = useNavigate();
     const handleSubmit = useCallback(async () => {
@@ -32,14 +32,6 @@ export default function BoardEditor() {
             navigate('/board/1');
         });
     }, [data, num, auth.jwt])
-    useEffect(() => {
-        header.setMenu(() => {
-            return <button onClick={handleSubmit}>[작성 완료]</button>
-        })
-        return () => {
-            header.setDefault();
-        }
-    }, [handleSubmit]);
     useEffect(() => {
         const authenticate = async () => {
             await fetch.authenticate();
@@ -146,9 +138,16 @@ export default function BoardEditor() {
 
 
     return (
-        <div className={'p-2'}>
-            <input type="text" onChange={handleTitleChange} value={data.title} className={'w-full max-w-[calc(100%-1rem)] p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-800 m-2 focus:border-transparent'} placeholder="제목을 입력하세요"/>
-            <ReactQuill ref={quillRef} className={'m-2 h-80vh bg-white'} value={data.content} onChange={handleContentChange} modules={modules}/>
+        <div className="flex flex-col md:pl-64 h-screen">
+            <div className="flex-1 p-2 overflow-y-auto">
+                <input type="text" onChange={handleTitleChange} value={data.title} className="w-full max-w-[calc(100%-1rem)] p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-800 mb-2 focus:border-transparent" placeholder="제목을 입력하세요"/>
+                <ReactQuill ref={quillRef} className="m-2 h-80vh bg-white" value={data.content} onChange={handleContentChange} modules={modules}/>
+            </div>
+            <div className="bottom-0 p-4 right-0">
+                <button onClick={handleSubmit} className="p-3 bg-blue-500 text-white rounded-lg hover:bg-blue-600">
+                    게시물 작성
+                </button>
+            </div>
         </div>
     );
 }

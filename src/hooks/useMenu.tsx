@@ -1,15 +1,12 @@
-import React, {ReactElement, useCallback, useContext, useState} from "react";
-import {Link} from "react-router-dom";
-import {ContextStore} from "../router/AppRouter";
+import React, {ReactElement, useState} from "react";
 import UserMenu from "../components/auth/UserMenu";
 import GuestMenu from "../components/auth/GuestMenu";
 
 
-export default function useHeader():HeaderContext {
-    const [extraMenu, setExtraMenu] = useState<ReactElement>(<></>);
+export default function useMenu():MenuContext {
 
     const [authMenu, setAuthMenu] = useState<ReactElement>(() => {
-        const isLoggedIn = sessionStorage.getItem('key') !== null;
+        const isLoggedIn = localStorage.getItem('key') !== null;
         return isLoggedIn ? <UserMenu/> : <GuestMenu/>
     });
     const setUserMenu = () => {
@@ -19,9 +16,6 @@ export default function useHeader():HeaderContext {
         setAuthMenu(<GuestMenu/>);
     }
 
-    const setDefault = () => {
-        setExtraMenu(() => <></>);
-    }
 
-    return {menu: extraMenu, authMenu, setMenu: setExtraMenu, setUserMenu, setGuestMenu, setDefault}
+    return {authMenu,  setUserMenu, setGuestMenu}
 }

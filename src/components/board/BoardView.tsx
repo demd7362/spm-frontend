@@ -11,7 +11,7 @@ export default function BoardView() {
     const params = useParams();
     const {num} = params;
     const navigate = useNavigate();
-    const {header,modal} = useContext(ContextStore);
+    const {modal,auth} = useContext(ContextStore);
     const [data,setData] = useState<BoardInfo | null>(null);
     const fetch = useFetch();
 
@@ -44,31 +44,21 @@ export default function BoardView() {
                         changed,
                         count,
                     });
-                    const handleClickModify = async ()=>{
-                        navigate(`/board/post/${num}`)
-                    }
-                    const handleClickDelete = async ()=> {
-                        modal.confirm('게시글 삭제','게시글을 정말로 삭제할까요?',async () => {
-                            const result = await fetch.$delete(`/api/v1/board/delete/${num}`);
-                            fetch.resultHandler(result,()=> {
-                                navigate('/board/1');
-                            });
-                        })
-                    }
-                    header.setMenu(()=> {
-                        return (
-                            <>
-                                <button onClick={handleClickModify}>[수정]</button>
-                                <button onClick={handleClickDelete}>[삭제]</button>
-                            </>
-                        )
-                    })
+
                 })
             })
-        return () => {
-            header.setDefault();
-        }
     }, []);
+    const handleClickModify = async ()=>{
+        navigate(`/board/post/${num}`);
+    }
+    const handleClickDelete = async ()=> {
+        modal.confirm('게시글 삭제','게시글을 정말로 삭제할까요?',async () => {
+            const result = await fetch.$delete(`/api/v1/board/delete/${num}`);
+            fetch.resultHandler(result,()=> {
+                navigate('/board/1');
+            });
+        })
+    }
     const renderCreateDate = useCallback(()=> {
         if(!data) return null;
         const {years,months,days,hours,minutes,seconds} = dateUtil.parseDate(data.created);
@@ -105,12 +95,19 @@ export default function BoardView() {
                         >
                             목록
                         </button>
+                        {auth.isLoggedIn &&
+                            <>
+                                <button onClick={handleClickModify} className="mt-4 bg-gray-400 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded">
+                                    수정
+                                </button>
+                                <button onClick={handleClickDelete} className="mt-4 bg-gray-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded">
+                                    삭제
+                                </button>
+                            </>}
                     </div>
                 </div>
-                <BoardCommentView />
-
+                <BoardCommentView/>
             </div>
-
         </Suspense>
     )
 }

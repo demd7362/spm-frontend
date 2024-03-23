@@ -110,15 +110,9 @@ declare global {
         confirm(title: string, content: string, onConfirm: () => void, onClose?: () => void): void;
     }
 
-    interface HeaderContext {
-        menu: ReactElement;
+    interface MenuContext {
         authMenu: ReactElement;
-        setMenu: Dispatch<SetStateAction<ReactElement>>;
-
-        setDefault(): void;
-
         setUserMenu(): void;
-
         setGuestMenu(): void;
     }
 
@@ -130,6 +124,7 @@ declare global {
         jwt: Jwt;
         saveToken: (Jwt: Jwt) => void;
         deleteToken: () => void;
+        isLoggedIn: boolean;
     }
 
     type OCIType = '01' | '02'

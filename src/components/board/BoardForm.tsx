@@ -44,7 +44,6 @@ export default function BoardForm() {
 
     const handleOptionChange = useCallback(
         (e: ChangeEvent<HTMLSelectElement>) => {
-            debugger
             const pageSize = Number(e.target.value);
             if (isNaN(pageSize)) return;
             setPagination((prev: BoardPagination) => {

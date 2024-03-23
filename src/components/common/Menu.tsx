@@ -1,6 +1,8 @@
-import React, {useState} from 'react';
+import React, {useContext, useState} from 'react';
 import {motion, AnimatePresence} from 'framer-motion';
 import {Link, useLocation} from "react-router-dom";
+import {ContextStore} from "../../router/AppRouter";
+import {IoLogInOutline, IoPersonAddOutline} from "react-icons/io5";
 
 interface MenuItem {
     label: string;
@@ -18,9 +20,11 @@ const menuItems: MenuItem[] = [
     },
 ];
 
-export default function Header() {
+export default function Menu() {
     const [openMenus, setOpenMenus] = useState<string[]>([]);
     const location = useLocation();
+    const {menu} = useContext(ContextStore);
+    console.log(menu)
 
     const toggleMenu = (label: string) => {
         setOpenMenus((prevOpenMenus) =>
@@ -31,8 +35,8 @@ export default function Header() {
     };
 
     return (
-        <div className="fixed inset-y-0 left-0 bg-gray-800 text-white w-64 overflow-y-auto">
-            <div className="px-4 py-6">
+        <div className="fixed inset-y-0 left-0 bg-gray-800 text-white w-64 overflow-y-auto flex flex-col">
+            <div className="px-4 py-6 flex-grow">
                 {menuItems.map((menuItem) => (
                     <div key={menuItem.label} className="mb-4">
                         <div className="flex justify-between items-center cursor-pointer" onClick={() => toggleMenu(menuItem.label)}>
@@ -77,6 +81,7 @@ export default function Header() {
                     </div>
                 ))}
             </div>
+            <div className="text-white pl-3 pb-6">{menu.authMenu}</div>
         </div>
     );
 };

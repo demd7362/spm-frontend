@@ -18,7 +18,7 @@ export default function GuestMenu(){
         })
     }
     return (
-        <div className='flex space-x-4'>
+        <div className='flex space-x-2'>
             <button {...commonProps} onClick={handleSignIn}><IoLogInOutline className='text-4xl'/></button>
             <button {...commonProps} onClick={handleSignUp}><IoPersonAddOutline className='text-4xl'/></button>
         </div>

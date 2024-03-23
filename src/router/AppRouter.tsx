@@ -1,10 +1,10 @@
 import {BrowserRouter, Route, Routes} from 'react-router-dom';
 import React, {createContext, lazy, Suspense} from 'react';
-import useHeader from "../hooks/useHeader";
+import useMenu from "../hooks/useMenu";
 import useModal from "../hooks/useModal";
 import useAuth from "../hooks/useAuth";
 import Modal from "../components/common/Modal";
-import Header from "../components/common/Header";
+import Menu from "../components/common/Menu";
 import AuthForm from "../components/auth/AuthForm";
 import Spinner from "../components/common/Spinner";
 import Claude from "../pages/Claude";
@@ -22,17 +22,14 @@ const modalDefaultValue: ModalContext = {
     setAuto: (arg1, arg2) => {},
     confirm: (arg1,arg2,arg3) => {}
 };
-const headerDefaultValue: HeaderContext = {
-    menu: <></>,
+const menuDefaultValue: MenuContext = {
     authMenu: <></>,
-    setMenu: () => {},
     setGuestMenu: () => {},
     setUserMenu: () => {},
-    setDefault: () => {}
 }
 const authDefaultValue: AuthContext = {
         authModalState: {
-        authFormType:'SignIn',
+        authFormType: 'SignIn',
         isOpen:false,
     },
     close: () => {},
@@ -44,23 +41,25 @@ const authDefaultValue: AuthContext = {
         accessToken: '',
         grantType: '',
         tokenExpiresIn: 0
-    }
+    },
+    isLoggedIn: false
 }
 
 interface ContextStore {
-    modal:ModalContext;
-    header:HeaderContext;
+    modal: ModalContext;
+    menu: MenuContext;
     auth: AuthContext;
 }
 
+// eslint-disable-next-line @typescript-eslint/no-redeclare
 export const ContextStore = createContext<ContextStore>({
     modal: modalDefaultValue,
-    header: headerDefaultValue,
+    menu: menuDefaultValue,
     auth: authDefaultValue,
 })
 export default function AppRouter() {
     const contextStore: ContextStore = {
-        header : useHeader(),
+        menu : useMenu(),
         modal : useModal(),
         auth: useAuth()
     }
@@ -74,7 +73,7 @@ export default function AppRouter() {
         <BrowserRouter>
             <ContextStore.Provider value={contextStore}>
                 <Modal {...contextStore.modal.props}/>
-                <Header />
+                <Menu />
                 <AuthForm {...contextStore.auth}/>
                 <Suspense fallback={<Spinner/>}>
                     <Routes>

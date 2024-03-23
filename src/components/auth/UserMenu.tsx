@@ -4,11 +4,11 @@ import {Link} from "react-router-dom";
 import {IoLogIn, IoLogOutOutline, IoPersonCircleOutline, IoTrailSignOutline} from "react-icons/io5";
 
 const commonProps = {className: 'hover:text-gray-300'};
-export default function UserMenu(){
-    const {header,auth} = useContext(ContextStore);
+export default function UserMenu() {
+    const {menu, auth} = useContext(ContextStore);
     const handleSignOut = () => {
         auth.deleteToken();
-        header.setGuestMenu();
+        menu.setGuestMenu();
     }
     return (
         <div className='flex space-x-2'>

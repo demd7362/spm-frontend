@@ -15,15 +15,16 @@ export default function useAuth(): AuthContext {
         authFormType: 'SignIn'
     });
     const [jwt, setJwt] = useState<Jwt>((): Jwt => {
-        const key = sessionStorage.getItem('key') || '{}';
+        const key = localStorage.getItem('key') || '{}';
         return JSON.parse(key);
     });
+    const isLoggedIn = localStorage.getItem('key') !== null;
     const saveToken = (jwt: Jwt) => {
-        sessionStorage.setItem('key', JSON.stringify(jwt));
+        localStorage.setItem('key', JSON.stringify(jwt));
         setJwt(jwt);
     }
     const deleteToken = () => {
-        sessionStorage.removeItem('key');
+        localStorage.removeItem('key');
         setJwt({
             accessToken: '',
             grantType: '',
@@ -58,6 +59,7 @@ export default function useAuth(): AuthContext {
         authModalState,
         jwt,
         saveToken,
-        deleteToken
+        deleteToken,
+        isLoggedIn
     }
 }
