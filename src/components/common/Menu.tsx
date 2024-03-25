@@ -24,7 +24,6 @@ export default function Menu() {
     const [openMenus, setOpenMenus] = useState<string[]>([]);
     const location = useLocation();
     const {menu} = useContext(ContextStore);
-    console.log(menu)
 
     const toggleMenu = (label: string) => {
         setOpenMenus((prevOpenMenus) =>

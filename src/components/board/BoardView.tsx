@@ -71,43 +71,41 @@ export default function BoardView() {
     if(!data) return null;
 
     return (
-        <Suspense fallback={<Spinner/>}>
-            <div className="container mx-auto p-4 bg-white rounded-lg h-screen">
-                <h1 className="text-2xl font-bold mb-4 text-black">{data.title}</h1>
-                <div className="w-full max-w-[calc(100%-1rem)]">
-                    <div className="border rounded-lg p-4 shadow-md">
-                        <div dangerouslySetInnerHTML={{ __html: data.content }} className="text-gray-700" />
-                        <div className="text-right mt-4">
-                            <p className="text-sm font-light">작성자: {data.email}</p>
-                            {renderCreateDate()}
-                        </div>
-                    </div>
-                    <div className="flex justify-center gap-2">
-                        <button
-                            onClick={handleRecommand}
-                            className="mt-4 bg-amber-700 hover:bg-amber-800 text-white font-bold py-2 px-4 rounded"
-                        >
-                            추천 {data.count}
-                        </button>
-                        <button
-                            onClick={() => navigate('/board/1')}
-                            className="mt-4 bg-yellow-500 hover:bg-yellow-600 text-white font-bold py-2 px-4 rounded"
-                        >
-                            목록
-                        </button>
-                        {auth.isLoggedIn &&
-                            <>
-                                <button onClick={handleClickModify} className="mt-4 bg-gray-400 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded">
-                                    수정
-                                </button>
-                                <button onClick={handleClickDelete} className="mt-4 bg-gray-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded">
-                                    삭제
-                                </button>
-                            </>}
+        <div className="container mx-auto p-4 bg-white rounded-lg h-screen">
+            <h1 className="text-2xl font-bold mb-4 text-black">{data.title}</h1>
+            <div className="w-full max-w-[calc(100%-1rem)]">
+                <div className="border rounded-lg p-4 shadow-md">
+                    <div dangerouslySetInnerHTML={{ __html: data.content }} className="text-gray-700" />
+                    <div className="text-right mt-4">
+                        <p className="text-sm font-light">작성자: {data.email}</p>
+                        {renderCreateDate()}
                     </div>
                 </div>
-                <BoardCommentView/>
+                <div className="flex justify-center gap-2">
+                    <button
+                        onClick={handleRecommand}
+                        className="mt-4 bg-amber-700 hover:bg-amber-800 text-white font-bold py-2 px-4 rounded"
+                    >
+                        추천 {data.count}
+                    </button>
+                    <button
+                        onClick={() => navigate('/board/1')}
+                        className="mt-4 bg-yellow-500 hover:bg-yellow-600 text-white font-bold py-2 px-4 rounded"
+                    >
+                        목록
+                    </button>
+                    {auth.isLoggedIn &&
+                        <>
+                            <button onClick={handleClickModify} className="mt-4 bg-gray-400 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded">
+                                수정
+                            </button>
+                            <button onClick={handleClickDelete} className="mt-4 bg-gray-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded">
+                                삭제
+                            </button>
+                        </>}
+                </div>
             </div>
-        </Suspense>
+            <BoardCommentView/>
+        </div>
     )
 }

@@ -15,6 +15,7 @@ module.exports = {
         100: '100',
       },
       backgroundImage:{
+        'not-found': "url('/src/assets/not-found.jpg')"
       },
       height: {
         '95vh' : '95vh',

@@ -37,7 +37,7 @@ export default function useModal():ModalContext {
                 closeText: '확인'
             }));
         },
-        [],
+        [close],
     );
 
     const confirm = useCallback((title:string,content:string,onConfirm: () => void, onClose?: () => void)=> {
@@ -57,7 +57,7 @@ export default function useModal():ModalContext {
             closeText: '취소',
             confirmText: '확인'
         }));
-    },[])
+    },[close])
 
     return {
         props,

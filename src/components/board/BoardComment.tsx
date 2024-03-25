@@ -32,6 +32,7 @@ function BoardComment(boardComment:BoardCommentProps){
     }
     const fetchReply = async () => {
         const result = await fetch.get(`/api/v1/board/comment/reply/${num}`);
+        console.log(result)
         setComments(result.data);
     }
     useEffect(()=> {
@@ -72,6 +73,12 @@ function BoardComment(boardComment:BoardCommentProps){
                 modal.setAuto(result.modal.title, result.modal.content);
             });
         });
+    }
+    const renderReply = () => {
+        const replies = comments.map((comment) => {
+            return <BoardComment key={StringUtils.generateRandomHash(4)} {...comment} />
+        })
+        return replies;
     }
     return (
         <div className="p-4 my-4 rounded-lg border border-gray-200 bg-gray-50 shadow-sm">
@@ -142,9 +149,7 @@ function BoardComment(boardComment:BoardCommentProps){
             <div className="text-xs font-medium text-gray-500 mt-2">
                 {email} {formattedDate}
             </div>
-            {comments.map((comment) => {
-                return <BoardComment key={StringUtils.generateRandomHash(4)} {...comment} />
-            })}
+            {renderReply()}
         </div>
     )
 }

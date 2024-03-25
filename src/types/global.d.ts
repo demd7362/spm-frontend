@@ -127,6 +127,11 @@ declare global {
         isLoggedIn: boolean;
     }
 
+    interface LoadingContext {
+        isLoading: boolean;
+        toggleLoading: () => void;
+    }
+
     type OCIType = '01' | '02'
 
     type OCIRequest = {

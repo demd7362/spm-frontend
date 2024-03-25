@@ -8,6 +8,7 @@ import Menu from "../components/common/Menu";
 import AuthForm from "../components/auth/AuthForm";
 import Spinner from "../components/common/Spinner";
 import Claude from "../pages/Claude";
+import useLoading from "../hooks/useLoading";
 
 
 const modalDefaultValue: ModalContext = {
@@ -45,10 +46,16 @@ const authDefaultValue: AuthContext = {
     isLoggedIn: false
 }
 
+const loadingDefaultValue: LoadingContext = {
+    isLoading: false,
+    toggleLoading: () => {}
+}
+
 interface ContextStore {
     modal: ModalContext;
     menu: MenuContext;
     auth: AuthContext;
+    loading: LoadingContext
 }
 
 // eslint-disable-next-line @typescript-eslint/no-redeclare
@@ -56,12 +63,14 @@ export const ContextStore = createContext<ContextStore>({
     modal: modalDefaultValue,
     menu: menuDefaultValue,
     auth: authDefaultValue,
+    loading: loadingDefaultValue
 })
 export default function AppRouter() {
     const contextStore: ContextStore = {
         menu : useMenu(),
         modal : useModal(),
-        auth: useAuth()
+        auth: useAuth(),
+        loading: useLoading()
     }
     const Main = lazy(() => import('../pages/Main'));
     const NotFound = lazy(() => import('../pages/NotFound'));

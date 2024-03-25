@@ -1,13 +1,12 @@
-import React, {useCallback, useContext, useEffect, useState} from "react";
+import React, {lazy, Suspense, useCallback, useContext, useEffect, useState} from "react";
 import useFetch from "../../hooks/useFetch";
-import Spinner from "../common/Spinner";
-import addImage from "assets/add-image.png";
 import {ContextStore} from "../../router/AppRouter";
-import BoardComment from "./BoardComment";
 import {useNavigate, useParams} from "react-router-dom";
 import Pagination from "../common/Pagination";
 import usePagination from "../../hooks/usePagination";
 import StringUtils from "../../utils/StringUtils";
+import BoardComment from "./BoardComment";
+import {IoImageOutline} from "react-icons/io5";
 
 const BOTTOM_SIZE = 5;
 const PAGE_SIZE = 10;
@@ -15,7 +14,7 @@ export default function BoardCommentView() {
     const fetch = useFetch();
     const params = useParams();
     const {num, page} = params;
-    const {modal} = useContext(ContextStore);
+    const {modal, loading} = useContext(ContextStore);
     const navigate = useNavigate();
     const [hashes, setHashes] = useState<string[]>([]);
     const {
@@ -101,13 +100,16 @@ export default function BoardCommentView() {
 
     }, [])
 
-
+    const renderComments = () => {
+        const comments = pagination.content.map(comment => {
+            return <BoardComment key={comment.num} {...comment}/>
+        })
+        return comments;
+    }
     return (
         <div className="p-4">
             <div className="mb-4">
-                {pagination.content.map(comment => {
-                    return <BoardComment key={comment.num} {...comment}/>
-                })}
+                {renderComments()}
             </div>
             <div className={'container mx-auto py-2'}>
                 {pagination.content.length > 0 && (
@@ -120,7 +122,9 @@ export default function BoardCommentView() {
                 <button onClick={() => handleCommentSubmit(comment)} className="mt-2 px-4 py-2 text-sm font-medium text-gray-100 bg-purple-600 rounded-lg shadow hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-opacity-50 transition duration-300 ease-in-out">
                     댓글 달기
                 </button>
-                <img onClick={handleAddImage} src={addImage} alt="Add Image" className={'w-10 h-10 mt-2 rounded-3xl cursor-pointer'}/>
+                <button onClick={handleAddImage} className={'w-10 h-10 mt-2 rounded-3xl cursor-pointer'}>
+                    <IoImageOutline className='text-2xl'/>
+                </button>
             </div>
         </div>
     );

@@ -6,7 +6,7 @@ import Spinner from "../common/Spinner";
 export default function SignUpForm() {
     const fetch = useFetch();
     const {modal, auth} = useContext(ContextStore);
-    const [isAvailable, setIsAvailable] = useState(false);
+    const [isAvailable, setAvailable] = useState(false);
     const [formData, setFormData] = useState<SignUp>({
         email: '',
         password: '',
@@ -50,7 +50,7 @@ export default function SignUpForm() {
             fetch.resultHandler(result, () => {
                 const {title, content} = result.modal;
                 modal.setAuto(title,content);
-                setIsAvailable(true);
+                setAvailable(true);
             });
         }
     };

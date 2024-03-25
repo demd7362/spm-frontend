@@ -4,7 +4,7 @@ import DateUtils from "../utils/dateUtils";
 
 export default function Profile() {
     const fetch = useFetch();
-    const [isAuthorized, setIsAuthorized] = useState(false);
+    const [isAuthorized, setAuthorized] = useState(false);
     const [userInfo, setUserInfo] = useState<UserInfo>({
         point: 0,
         email: ''
@@ -16,7 +16,7 @@ export default function Profile() {
         const result: FetchResult = await fetch.get('/api/v1/auth/profile');
         fetch.resultHandler(result, (data) => {
             setUserInfo(data);
-            setIsAuthorized(true);
+            setAuthorized(true);
         })
     }
     const getDateDiff = useMemo(() => {

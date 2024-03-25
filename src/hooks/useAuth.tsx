@@ -1,4 +1,4 @@
-import {useState} from "react";
+import {useCallback, useMemo, useState} from "react";
 export type AuthFormType = 'SignIn' | 'SignUp' | 'ForgotPassword'
 
 export type AuthModalState = {
@@ -18,39 +18,39 @@ export default function useAuth(): AuthContext {
         const key = localStorage.getItem('key') || '{}';
         return JSON.parse(key);
     });
-    const isLoggedIn = localStorage.getItem('key') !== null;
-    const saveToken = (jwt: Jwt) => {
+    const isLoggedIn = useMemo(() => localStorage.getItem('key') !== null,[]);
+    const saveToken = useCallback((jwt: Jwt) => {
         localStorage.setItem('key', JSON.stringify(jwt));
         setJwt(jwt);
-    }
-    const deleteToken = () => {
+    },[]);
+    const deleteToken = useCallback(() => {
         localStorage.removeItem('key');
         setJwt({
             accessToken: '',
             grantType: '',
             tokenExpiresIn: 0
         });
-    }
-    const close = () => {
+    },[])
+    const close = useCallback(() => {
         setAuthModalState(prev => ({
             ...prev,
             isOpen: false,
         }));
         authModalState.callback?.();
-    }
-    const open = () => {
+    },[authModalState])
+    const open = useCallback(() => {
         setAuthModalState(prev => ({
             ...prev,
             isOpen: true,
         }));
         authModalState.callback?.();
-    }
-    const handleAuthModal = (authModalState:AuthModalState) => {
+    },[authModalState])
+    const handleAuthModal = useCallback((authModalState:AuthModalState) => {
         setAuthModalState(prev => ({
             ...prev,
             ...authModalState
         }));
-    }
+    },[]);
 
     return {
         close,
